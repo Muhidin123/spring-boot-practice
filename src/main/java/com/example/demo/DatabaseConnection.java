@@ -12,7 +12,9 @@ public class DatabaseConnection {
     }
 
     public static Connection  createAndReturnConnection() throws SQLException {
+        //ESTABLISHES A CONNECTION TO DB AND RETURNS NEW CONNECTION FOR RE-USAGE
         Connection connectionToDB;
+        //GET CONN WITH DRIVER=MANAGER
         connectionToDB = DriverManager.getConnection(URL_CONNECTION_TO_DB);
         return connectionToDB;
     }

@@ -22,38 +22,36 @@ class DemoApplicationTests {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void givenDataIsJson_whenDataIsPostedByPostForObject_thenResponseBodyIsNotNull()
-            throws IOException, JSONException {
+     void givenDataIsJson_whenDataIsPostedByPostForObject_thenResponseBodyIsNotNull()
+            throws JSONException {
+
+        //Url for the POST request to be sent
         String createPersonUrl = "http://localhost:8080/createPerson";
 
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders  headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        JSONObject person = new JSONObject();
+        RestTemplate restTemplate = new RestTemplate(); //new rest Template to test POST req
+        HttpHeaders  headers = new HttpHeaders(); //
+        headers.setContentType(MediaType.APPLICATION_JSON); //setting up headers to application/json other versions are possible
+        JSONObject person = new JSONObject(); // building a JSON object to send with post req
         person.put("firstName", "Muhidin");
         person.put("lastName", "Muhidin");
         person.put("age", 25);
         person.put("address", "Salih bega Kuljuha");
-        person.put("id", 1);
 
-        HttpEntity<String> request =
+        HttpEntity<String>request =
                 new HttpEntity<>(person.toString(), headers);
-        String personResultAsJsonStr =
-                restTemplate.postForObject(createPersonUrl, request, String.class);
-        JsonNode root = objectMapper.readTree(personResultAsJsonStr);
+        Person person2 =
+                restTemplate.postForObject(createPersonUrl, request, Person.class); //The postForObject() method returns the response body as a String type.
+//        JsonNode root = objectMapper.readTree(personResultAsJsonStr);
 
 
-        Assertions.assertNotNull(personResultAsJsonStr);
-        Assertions.assertNotNull(root);
-        Assertions.assertNotNull(root.path("firstName").asText());
+        Assertions.assertNotNull(person2);
+        Assertions.assertNotNull(person2.getFirstName());
     }
-
-
-
 
 
     @Test
     void shouldReturn200ResponseWithValidGetReqToroute(){
+        //returns 200 response if everything is setup properly
         GreetingController test = new GreetingController();
         ResponseEntity<String> result = test.testResponse();
         Assertions.assertNotNull(result);
