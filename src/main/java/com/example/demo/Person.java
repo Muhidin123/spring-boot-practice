@@ -38,4 +38,10 @@ public class Person {
     }
 
 
+    public Person updatePerson(Person person) {
+        System.out.println(person.firstName + " " +  person.lastName);
+        return person;
+    }
+
+
 }

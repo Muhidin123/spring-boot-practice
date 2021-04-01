@@ -6,29 +6,45 @@ import java.util.List;
 
 
 public class DatabaseConnection {
-
-    public static void main(String[] args) throws ClassNotFoundException {
+    public static final String URL_CONNECTION_TO_DB = "jdbc:sqlite:persons.sqlite";
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
         ConnectionToPersonsTable();
     }
 
-    public static void updateTablePersons(Connection connectionToDatabase, String firstName, String lastName, String address, int age) throws SQLException {
+    public static Connection  createAndReturnConnection() throws SQLException {
+        Connection connectionToDB;
+        connectionToDB = DriverManager.getConnection(URL_CONNECTION_TO_DB);
+        return connectionToDB;
+    }
+
+    public static void  updateTablePersons(String firstName, String lastName, String address, int age) throws SQLException {
+        //SETS UP QUERY TO INSERT INTO TABLE PERSONS
         String updateQuery = "INSERT INTO persons(firstName, lastName, address, age) VALUES (?,?,?,?)";
-        PreparedStatement preparedStatement = connectionToDatabase.prepareStatement(updateQuery);
+        //CREATES CONNECTION TO DATABASE TO USE WHEN UPDATING
+        Connection connectionToDB = createAndReturnConnection();
+
+        //PREPARED STATEMENT TO CREATE NEW OBJECT AND INSERT IT INTO DB
+        PreparedStatement preparedStatement = connectionToDB.prepareStatement(updateQuery);
         preparedStatement.setString(1, firstName);
         preparedStatement.setString(2, lastName);
         preparedStatement.setString(3, address);
         preparedStatement.setInt(4, age);
+
+        //EXECUTING UPDATE
+        preparedStatement.executeUpdate();
+        connectionToDB.close();
+
     }
 
-    public static List<Object> ConnectionToPersonsTable() throws ClassNotFoundException {
-        Connection connectionToDatabase = null;
+
+    public static List<Object> ConnectionToPersonsTable() throws ClassNotFoundException, SQLException {
+        Connection connectionToDatabase = createAndReturnConnection();
         Statement queryToExecute;
         ResultSet resultOfQuery;
-        List<Object> array = new ArrayList<Object>();
+        List<Object> array = new ArrayList<>();
         try {
             Class.forName("org.sqlite.JDBC");
-            String url = "jdbc:sqlite:persons.sqlite";
-            connectionToDatabase = DriverManager.getConnection(url);
+            connectionToDatabase = DriverManager.getConnection(URL_CONNECTION_TO_DB);
             queryToExecute = connectionToDatabase.createStatement();
             resultOfQuery = queryToExecute.executeQuery("SELECT * FROM persons;");
             while (resultOfQuery.next()) {
@@ -51,6 +67,4 @@ public class DatabaseConnection {
         return array;
     }
 
-    public static void sendInformationToFrontEndFromPersonsTable() {
-    }
 }
