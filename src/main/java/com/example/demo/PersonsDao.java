@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DatabaseConnection {
+public class PersonsDao {
     public static final String URL_CONNECTION_TO_DB = "jdbc:sqlite:persons.sqlite";
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         ConnectionToPersonsTable();
